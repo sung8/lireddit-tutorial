@@ -1,0 +1,148 @@
+GraphQL Queries and Mutations 
+Testing on GraphQL Playground
+Run server and go to localhost:[port#]/graphql
+
+Simple query to test hello.ts resolver 
+{
+  hello
+}
+
+RESULT: 
+{
+    "data": {
+        "hello": "bye"
+    }
+}
+
+----------------------
+
+Get All Posts Query 
+{
+	posts {
+    id
+    createdAt
+    updatedAt
+    title
+  }
+}
+
+RESULT: an array of all our posts 
+{
+  "data": {
+    "posts": [
+      {
+        "id": 2,
+        "createdAt": "1600913594000",
+        "updatedAt": "1600913594000",
+        "title": "my first post"
+      },
+      {
+        "id": 3,
+        "createdAt": "1600913645000",
+        "updatedAt": "1600913645000",
+        "title": "my first post"
+      },
+      {
+        "id": 4,
+        "createdAt": "1600913683000",
+        "updatedAt": "1600913683000",
+        "title": "my first post"
+      }
+    ]
+  }
+}
+
+----------------------
+Get a Post
+{
+  post(id:3) {
+    title
+  }
+}
+
+RESULT: 
+{
+  "data": {
+    "post": {
+      "title": "my first post"
+    }
+  }
+}
+
+when invalid id is passed it, it returns null
+
+----------------------
+
+Creating a Post
+
+mutation {
+  createPost(title: "post from graphql") {
+    id
+    createdAt
+    updatedAt
+    title
+  }
+}
+
+RESULT: 
+{
+  "data": {
+    "createPost": {
+      "id": 6,
+      "createdAt": "1600915815985",
+      "updatedAt": "1600915815985",
+      "title": "post from graphql"
+    }
+  }
+}
+
+For mutations, we have to explicitly state 'mutation'
+id, createdAt, updatedAt, title is what we chose to get back after creating the post
+
+----------------------
+
+Updating a Post
+mutation {
+  updatePost(id: 2, title: "bob") {
+    id
+    createdAt
+    updatedAt
+    title
+  }
+}
+
+RESULT: 
+{
+  "data": {
+    "updatePost": {
+      "id": 2,
+      "createdAt": "1600913594000",
+      "updatedAt": "1600919541487",
+      "title": "bob"
+    }
+  }
+}
+We can see in the console that the query selected a post and mutated it by updating
+SQL in console
+[query] select "e0".* from "post" as "e0" where "e0"."id" = 2 limit 1 
+[query] begin
+[query] update "post" set "title" = 'bob', "updated_at" = '2020-09-23 23:52:21.487' where "id" = 2 
+[query] commit
+
+----------------------
+
+Deleting a Post 
+mutation {
+  deletePost(id: 5) 
+}
+
+RESULT:
+{
+  "data": {
+    "deletePost": true
+  }
+}
+
+SQL in console
+[query] select "e0".* from "post" as "e0" 
+[query] delete from "post" where "id" = 5 
