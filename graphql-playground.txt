@@ -146,3 +146,17 @@ RESULT:
 SQL in console
 [query] select "e0".* from "post" as "e0" 
 [query] delete from "post" where "id" = 5 
+
+----------------------
+
+Register New User
+mutation {
+  register(options: {username: "ben", password: "ben"}) {
+    id
+    createdAt
+    updatedAt
+    username
+  }
+}
+
+We cannot get the password

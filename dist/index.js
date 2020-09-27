@@ -20,13 +20,25 @@ const apollo_server_express_1 = require("apollo-server-express");
 const type_graphql_1 = require("type-graphql");
 const hello_1 = require("./resolvers/hello");
 const post_1 = require("./resolvers/post");
+const user_1 = require("./resolvers/user");
 const main = () => __awaiter(void 0, void 0, void 0, function* () {
     const orm = yield core_1.MikroORM.init(mikro_orm_config_1.default);
     yield orm.getMigrator().up();
+    // const post = orm.em.create(Post, { title: "my first post" });
+    // await orm.em.persistAndFlush(post);
+    // a native insert doesn't actually create a class Post. this results in error, but for other projects nativeInsert is an option
+    // await orm.em.nativeInsert(Post, { title: "my first post 2" });
+    // const posts = await orm.em.find(Post, {});
+    // console.log(posts);
     const app = express_1.default();
+    // rest endpoint
+    //    app.get("/", (_, res) => {
+    //       res.send("hello");
+    //    });
+    // we want graphql server
     const apolloServer = new apollo_server_express_1.ApolloServer({
         schema: yield type_graphql_1.buildSchema({
-            resolvers: [hello_1.HelloResolver, post_1.PostResolver],
+            resolvers: [hello_1.HelloResolver, post_1.PostResolver, user_1.UserResolver],
             validate: false,
         }),
         context: () => ({ em: orm.em }),
